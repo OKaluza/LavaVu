@@ -82,37 +82,3 @@ jobs:
           name: sdist-${{ strategy.job-index }}
           path: dist/*.tar.gz
 
-  upload_pypi:
-    needs: [build_wheels, build_sdist]
-    name: Upload release to PyPI
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/lavavu
-    permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
-    # upload to PyPI on every tag starting with 'v'
-    #if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
-    # alternatively, to publish when a GitHub Release is created, use the following rule:
-    # if: github.event_name == 'release' && github.event.action == 'published'
-    steps:
-      - name: Retrieve wheels
-        uses: actions/download-artifact@v4
-        with:
-          pattern: cibw-wheels*
-          path: dist
-          merge-multiple: true
-
-      - name: Retrieve sdist
-        uses: actions/download-artifact@v4
-        with:
-          pattern: sdist*
-          path: dist
-          merge-multiple: true
-
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        #Uncomment to use testing repo
-        #with:
-        #  repository-url: https://test.pypi.org/legacy/
-
