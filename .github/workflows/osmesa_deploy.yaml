@@ -1,13 +1,12 @@
 # Builds a special version of the wheel including OSMesa for use on Gadi
 name: OSMesaDeploy
 
+# Build on every branch push, tag push, and pull request change where tag matches a version release
 on:
-  #push
-  # Runs when a (published) GitHub Release is created
-  release:
-    types:
-      - published
-
+  workflow_dispatch:
+  push:
+    tags:
+     - '[0-9]+.[0-9]+.[0-9]+'
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
